@@ -24,6 +24,8 @@ public class TotemController : MonoBehaviour {
 		if(isUsed) {
 			MeshRenderer[] renderers = this.transform.parent.gameObject.GetComponentsInChildren<MeshRenderer>();
 			foreach(MeshRenderer o in renderers) o.enabled = false;
+			Light[] lights = this.transform.parent.gameObject.GetComponentsInChildren<Light>();
+			foreach(Light o in lights) o.enabled = false;
 		}
 	}
 

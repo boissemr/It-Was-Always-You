@@ -17,10 +17,7 @@ public class EnemyAgentController : MonoBehaviour {
 	int					layerMask;
 
 	[HideInInspector]
-	public float		targetSpeed,
-						targetDistance;
-	Vector3				targetPosition,
-						targetPreviousPosition;
+	public float		targetDistance;
 
 	// start
 	void Start() {
@@ -44,18 +41,13 @@ public class EnemyAgentController : MonoBehaviour {
 
 	// stuff to do while alive
 	void doWhileAlive() {
-		// target attributes
-		targetPreviousPosition = targetPosition;
-		targetPosition = target.transform.position;
-		targetSpeed = (targetPosition - targetPreviousPosition).magnitude / Time.deltaTime;
-		targetDistance = (targetPosition - transform.position).magnitude;
-		
 		// engage, retreat, or give up pursuit
+		targetDistance = (target.transform.position - transform.position).magnitude;
 		if (targetDistance < engagementRange) {
-			agent.SetDestination(targetPosition);
-			agent.speed = targetSpeed * speed;
+			agent.SetDestination(target.transform.position);
+			agent.speed = target.GetComponent<AgentController>().gameSpeed * speed;
 			if (targetDistance < retreatRange) {
-				agent.speed = targetSpeed * -speed;
+				agent.speed = target.GetComponent<AgentController>().gameSpeed * -speed;
 			}
 		} else {
 			agent.speed = 0;

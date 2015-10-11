@@ -4,7 +4,8 @@ using System.Collections;
 public class AgentController : MonoBehaviour {
 
 	// public parameters
-	public GameObject	target;
+	public GameObject	target,
+						bullet;
 	public float		health,
 						attack,		// damage dealt per second
 						reach;
@@ -15,6 +16,10 @@ public class AgentController : MonoBehaviour {
 						enemies;
 	RaycastHit[]		hit;
 	GameObject			targetEnemy;
+
+	[HideInInspector]
+	public float	gameSpeed;
+	public Vector3	previousPosition;
 
 	// start
 	void Start () {
@@ -32,8 +37,10 @@ public class AgentController : MonoBehaviour {
 	}
 
 	// update
-	void Update () {
-		// TODO optimize by only doing this stuff when necessary
+	void Update () {		
+		// determining game speed
+		gameSpeed = (transform.position - previousPosition).magnitude / Time.deltaTime;
+		previousPosition = transform.position;
 
 		// set destination
 		agent.SetDestination(target.transform.position);
@@ -52,11 +59,11 @@ public class AgentController : MonoBehaviour {
 
 		// attack targeted enemy
 		if (targetEnemy != null) {
-			EnemyAgentController o = targetEnemy.GetComponent<EnemyAgentController>();
-
-			// attack is in points per second
-			// times speed/topspeed to scale with play start and stop
-			o.health -= attack * Time.deltaTime * o.targetSpeed / agent.speed;
+			Vector3 p1 = transform.position, p2 = targetEnemy.transform.position;
+			GameObject o = (GameObject)Instantiate(bullet, transform.position, transform.rotation);
+			o.GetComponent<BulletController>().target = targetEnemy;
+			o.GetComponent<BulletController>().type = "friendly";
+			o.GetComponent<BulletController>().player = transform.gameObject;
 		}
 	}
 

@@ -13,6 +13,8 @@ public class EnemyAgentController : MonoBehaviour {
 						attackRange,
 						fireRate;
 	public bool			returnToPost,
+						alwaysFacePlayer,
+						wander,
 						isDead;
 
 	// private variables
@@ -20,7 +22,8 @@ public class EnemyAgentController : MonoBehaviour {
 	RaycastHit[]		hit;
 	int					layerMask;
 	float				gameSpeed,
-						fireTimer;
+						fireTimer,
+						wanderTimer;
 	Vector3				startPosition;
 
 	[HideInInspector]
@@ -57,12 +60,16 @@ public class EnemyAgentController : MonoBehaviour {
 
 	// stuff to do while alive
 	void doWhileAlive() {
-		targetDistance = (target.transform.position - transform.position).magnitude;
 
-		// engage, retreat, or give up pursuit
+		// moving around
+		// TODO add better commenting
+		targetDistance = (target.transform.position - transform.position).magnitude;
 		if (targetDistance < engagementRange) {
 			agent.SetDestination(target.transform.position);
 			agent.speed = gameSpeed * speed;
+			if (!returnToPost) {
+				startPosition = transform.position;
+			}
 			if (targetDistance < retreatRange) {
 				agent.speed = gameSpeed * -speed;
 			}
@@ -70,7 +77,21 @@ public class EnemyAgentController : MonoBehaviour {
 			agent.SetDestination(startPosition);
 			agent.speed = gameSpeed * speed;
 		} else {
-			agent.speed = 0;
+			if (wander) {
+				if (wanderTimer <= 0) {
+					wanderTimer = Random.value * 100;
+					Vector3 wanderDestination;
+					wanderDestination = transform.position + new Vector3(Random.value-.5f, 0, Random.value-.5f) * 5;
+					if ((wanderDestination - startPosition).magnitude < 10) {
+						agent.SetDestination(wanderDestination);
+					} else {
+						agent.SetDestination(startPosition);
+					}
+				} else {
+					wanderTimer -= gameSpeed * Time.deltaTime;
+				}
+				agent.speed = gameSpeed * speed;
+			}
 		}
 
 		// attack the player
@@ -83,6 +104,11 @@ public class EnemyAgentController : MonoBehaviour {
 			}
 		} else {
 			fireTimer -= Time.deltaTime * gameSpeed;
+		}
+
+		// face player
+		if (alwaysFacePlayer) {
+			transform.LookAt(new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z));
 		}
 
 		// die if health is below 0

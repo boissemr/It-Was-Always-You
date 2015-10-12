@@ -64,13 +64,19 @@ public class AgentController : MonoBehaviour {
 			fireTimer -= Time.deltaTime * gameSpeed;
 			if(fireTimer <= 0) {
 				fireTimer += fireRate;
-				GameObject o = (GameObject)Instantiate(bullet, transform.position, transform.rotation);
-				o.GetComponent<BulletController>().target = targetEnemy;
-				o.GetComponent<BulletController>().type = "friendly";
-				o.GetComponent<BulletController>().player = transform.gameObject;
+				BulletController o = ((GameObject)Instantiate(bullet, transform.position, transform.rotation)).GetComponent<BulletController>();
+				o.target = targetEnemy;
+				o.type = "friendly";
+				o.player = transform.gameObject;
+				o.damage = attack;
 			}
 		} else {
 			fireTimer = 0;
+		}
+
+		// die
+		if (health <= 0) {
+			transform.parent.gameObject.SetActive(false);
 		}
 	}
 

@@ -4,17 +4,23 @@ using System.Collections;
 public class EnemyAgentController : MonoBehaviour {
 
 	// public parameters
-	public GameObject	target;
+	public GameObject	target,
+						bullet;
 	public float		health,
 						speed,
+						attack,
 						engagementRange,
-						retreatRange;
+						retreatRange,
+						attackRange,
+						fireRate;
 	public bool			isDead;
 
 	// private variables
 	NavMeshAgent		agent;
 	RaycastHit[]		hit;
 	int					layerMask;
+	float				gameSpeed,
+						fireTimer;
 
 	[HideInInspector]
 	public float		targetDistance;
@@ -32,6 +38,8 @@ public class EnemyAgentController : MonoBehaviour {
 
 	// update
 	void Update() {
+		gameSpeed = target.GetComponent<AgentController> ().gameSpeed;
+
 		if (isDead) {
 			doWhileDead();
 		} else {
@@ -45,16 +53,32 @@ public class EnemyAgentController : MonoBehaviour {
 
 	// stuff to do while alive
 	void doWhileAlive() {
-		// engage, retreat, or give up pursuit
 		targetDistance = (target.transform.position - transform.position).magnitude;
+
+		// engage, retreat, or give up pursuit
 		if (targetDistance < engagementRange) {
 			agent.SetDestination(target.transform.position);
-			agent.speed = target.GetComponent<AgentController>().gameSpeed * speed;
+			agent.speed = gameSpeed * speed;
 			if (targetDistance < retreatRange) {
-				agent.speed = target.GetComponent<AgentController>().gameSpeed * -speed;
+				agent.speed = gameSpeed * -speed;
 			}
 		} else {
 			agent.speed = 0;
+		}
+
+		// attack the player
+		if (targetDistance < attackRange) {
+			fireTimer -= Time.deltaTime * gameSpeed;
+			if(fireTimer <= 0) {
+				fireTimer += fireRate;
+				BulletController o = ((GameObject)Instantiate(bullet, transform.position, transform.rotation)).GetComponent<BulletController>();
+				o.target = target;
+				o.type = "enemy";
+				o.player = target;
+				o.damage = attack;
+			}
+		} else {
+			fireTimer = 0;
 		}
 
 		// die if health is below 0

@@ -7,9 +7,8 @@ public class AgentController : MonoBehaviour {
 	public GameObject	target,
 						bullet;
 	public float		health,
-						attack,		// damage in each shot
 						reach,
-						fireRate;	// time between shots
+						fireRate;
 
 	// private variables
 	NavMeshAgent		agent;
@@ -60,18 +59,15 @@ public class AgentController : MonoBehaviour {
 		}
 
 		// attack targeted enemy
-		if (targetEnemy != null) {
-			fireTimer -= Time.deltaTime * gameSpeed;
-			if(fireTimer <= 0) {
+		if(fireTimer <= 0) {
+			if (targetEnemy != null) {
 				fireTimer += fireRate;
 				BulletController o = ((GameObject)Instantiate(bullet, transform.position, transform.rotation)).GetComponent<BulletController>();
 				o.target = targetEnemy;
-				o.type = "friendly";
 				o.player = transform.gameObject;
-				o.damage = attack;
 			}
 		} else {
-			fireTimer = 0;
+			fireTimer -= Time.deltaTime * gameSpeed;
 		}
 
 		// die

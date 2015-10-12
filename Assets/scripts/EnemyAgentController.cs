@@ -8,12 +8,12 @@ public class EnemyAgentController : MonoBehaviour {
 						bullet;
 	public float		health,
 						speed,
-						attack,
 						engagementRange,
 						retreatRange,
 						attackRange,
 						fireRate;
-	public bool			isDead;
+	public bool			returnToPost,
+						isDead;
 
 	// private variables
 	NavMeshAgent		agent;
@@ -21,12 +21,16 @@ public class EnemyAgentController : MonoBehaviour {
 	int					layerMask;
 	float				gameSpeed,
 						fireTimer;
+	Vector3				startPosition;
 
 	[HideInInspector]
 	public float		targetDistance;
 
 	// start
 	void Start() {
+		// assign start position for returnToPost enemies
+		startPosition = transform.position;
+
 		// claim a target
 		layerMask = 1 << 8;
 		hit = Physics.SphereCastAll(transform.position, 100, transform.forward, 0, layerMask);
@@ -62,23 +66,23 @@ public class EnemyAgentController : MonoBehaviour {
 			if (targetDistance < retreatRange) {
 				agent.speed = gameSpeed * -speed;
 			}
+		} else if (returnToPost) {
+			agent.SetDestination(startPosition);
+			agent.speed = gameSpeed * speed;
 		} else {
 			agent.speed = 0;
 		}
 
 		// attack the player
-		if (targetDistance < attackRange) {
-			fireTimer -= Time.deltaTime * gameSpeed;
-			if(fireTimer <= 0) {
+		if (fireTimer <= 0) {
+			if (targetDistance < attackRange) {
 				fireTimer += fireRate;
-				BulletController o = ((GameObject)Instantiate(bullet, transform.position, transform.rotation)).GetComponent<BulletController>();
+				BulletController o = ((GameObject)Instantiate (bullet, transform.position, transform.rotation)).GetComponent<BulletController> ();
 				o.target = target;
-				o.type = "enemy";
 				o.player = target;
-				o.damage = attack;
 			}
 		} else {
-			fireTimer = 0;
+			fireTimer -= Time.deltaTime * gameSpeed;
 		}
 
 		// die if health is below 0

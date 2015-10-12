@@ -6,9 +6,11 @@ public class BulletController : MonoBehaviour {
 	public float		speed,
 						timeOut,
 						damage;
+	public bool			isFriendlyBullet;
+
+	[HideInInspector]
 	public GameObject	target,
-						player;
-	public string		type;
+	player;
 
 	void Start() {
 		// aimed at target
@@ -28,10 +30,10 @@ public class BulletController : MonoBehaviour {
 
 	void OnTriggerEnter(Collider c) {
 		// hurt enemies
-		if (type == "friendly" && c.gameObject.layer == 10) {
+		if (isFriendlyBullet && c.gameObject.layer == 10) {
 			c.gameObject.GetComponent<EnemyAgentController>().health -= damage;
 			DestroyObject(transform.gameObject);
-		} else if (type == "enemy" && c.gameObject.layer == 8) {
+		} else if (!isFriendlyBullet && c.gameObject.layer == 8) {
 			c.gameObject.GetComponent<AgentController>().health -= damage;
 			DestroyObject(transform.gameObject);
 		}

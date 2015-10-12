@@ -38,6 +38,10 @@ public class EnemyAgentController : MonoBehaviour {
 			doWhileAlive();
 		}
 	}
+	
+	void OnDisable() {
+		GetComponent<NavMeshAgent>().enabled = false;
+	}
 
 	// stuff to do while alive
 	void doWhileAlive() {

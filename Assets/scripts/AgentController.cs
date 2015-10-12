@@ -7,8 +7,9 @@ public class AgentController : MonoBehaviour {
 	public GameObject	target,
 						bullet;
 	public float		health,
-						attack,		// damage dealt per second
-						reach;
+						attack,		// damage in each shot
+						reach,
+						fireRate;	// time between shots
 
 	// private variables
 	NavMeshAgent		agent;
@@ -16,6 +17,7 @@ public class AgentController : MonoBehaviour {
 						enemies;
 	RaycastHit[]		hit;
 	GameObject			targetEnemy;
+	float				fireTimer;
 
 	[HideInInspector]
 	public float	gameSpeed;
@@ -59,11 +61,16 @@ public class AgentController : MonoBehaviour {
 
 		// attack targeted enemy
 		if (targetEnemy != null) {
-			Vector3 p1 = transform.position, p2 = targetEnemy.transform.position;
-			GameObject o = (GameObject)Instantiate(bullet, transform.position, transform.rotation);
-			o.GetComponent<BulletController>().target = targetEnemy;
-			o.GetComponent<BulletController>().type = "friendly";
-			o.GetComponent<BulletController>().player = transform.gameObject;
+			fireTimer -= Time.deltaTime * gameSpeed;
+			if(fireTimer <= 0) {
+				fireTimer += fireRate;
+				GameObject o = (GameObject)Instantiate(bullet, transform.position, transform.rotation);
+				o.GetComponent<BulletController>().target = targetEnemy;
+				o.GetComponent<BulletController>().type = "friendly";
+				o.GetComponent<BulletController>().player = transform.gameObject;
+			}
+		} else {
+			fireTimer = 0;
 		}
 	}
 

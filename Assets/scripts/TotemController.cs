@@ -22,10 +22,8 @@ public class TotemController : MonoBehaviour {
 	void Update() {
 		// make this totem invisible
 		if(isUsed) {
-			MeshRenderer[] renderers = this.transform.parent.gameObject.GetComponentsInChildren<MeshRenderer>();
-			foreach(MeshRenderer o in renderers) o.enabled = false;
-			Light[] lights = this.transform.parent.gameObject.GetComponentsInChildren<Light>();
-			foreach(Light o in lights) o.enabled = false;
+			foreach(MeshRenderer o in this.transform.parent.gameObject.GetComponentsInChildren<MeshRenderer>()) o.enabled = false;
+			foreach(Light o in this.transform.parent.gameObject.GetComponentsInChildren<Light>()) o.enabled = false;
 		}
 	}
 
@@ -64,6 +62,7 @@ public class TotemController : MonoBehaviour {
 													oController = o.gameObject.GetComponent<EnemyAgentController>();
 							n.localPosition = o.localPosition;
 							nController.health = oController.health;
+							nController.GetComponent<NavMeshAgent>().enabled = true;
 						}
 						
 						// target

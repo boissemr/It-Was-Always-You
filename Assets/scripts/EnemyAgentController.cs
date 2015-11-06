@@ -36,7 +36,7 @@ public class EnemyAgentController : MonoBehaviour {
 
 		// claim a target
 		layerMask = 1 << 8;
-		hit = Physics.SphereCastAll(transform.position, 100, transform.forward, 0, layerMask);
+		hit = Physics.SphereCastAll(transform.position, 200, transform.forward, 0, layerMask);
 		target = hit[0].collider.gameObject;
 
 		// define nav mesh agent
@@ -45,7 +45,7 @@ public class EnemyAgentController : MonoBehaviour {
 
 	// update
 	void Update() {
-		gameSpeed = target.GetComponent<AgentController> ().gameSpeed;
+		gameSpeed = target.GetComponent<AgentController>().gameSpeed;
 
 		if (isDead) {
 			doWhileDead();

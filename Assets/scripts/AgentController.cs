@@ -17,6 +17,7 @@ public class AgentController : MonoBehaviour {
 	RaycastHit[]		hit;
 	GameObject			targetEnemy;
 	float				fireTimer;
+	Animator			animator;
 
 	[HideInInspector]
 	public float	gameSpeed;
@@ -35,6 +36,9 @@ public class AgentController : MonoBehaviour {
 		
 		// define nav mesh agent
 		agent = GetComponent<NavMeshAgent>();
+		
+		// define animator
+		animator = GetComponentInChildren<Animator>();
 	}
 
 	// update
@@ -42,6 +46,13 @@ public class AgentController : MonoBehaviour {
 		// determining game speed
 		gameSpeed = (transform.position - previousPosition).magnitude / Time.deltaTime;
 		previousPosition = transform.position;
+
+		// animation
+		if(gameSpeed == 0) {
+			animator.enabled = false;
+		} else {
+			animator.enabled = true;
+		}
 
 		// set destination
 		agent.SetDestination(target.transform.position);

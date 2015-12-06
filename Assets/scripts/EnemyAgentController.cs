@@ -25,6 +25,7 @@ public class EnemyAgentController : MonoBehaviour {
 						fireTimer,
 						wanderTimer;
 	Vector3				startPosition;
+	bool				stopped;
 
 	[HideInInspector]
 	public float		targetDistance;
@@ -45,7 +46,11 @@ public class EnemyAgentController : MonoBehaviour {
 
 	// update
 	void Update() {
-		gameSpeed = target.GetComponent<AgentController>().gameSpeed;
+		if(stopped) {
+			gameSpeed = 0;
+		} else {
+			gameSpeed = target.GetComponent<AgentController> ().gameSpeed;
+		}
 
 		if (isDead) {
 			doWhileDead();
@@ -53,9 +58,11 @@ public class EnemyAgentController : MonoBehaviour {
 			doWhileAlive();
 		}
 	}
-	
-	void OnDisable() {
-		GetComponent<NavMeshAgent>().enabled = false;
+
+	void Awake() {
+		if(Time.fixedTime > 1) {
+			GetComponent<NavMeshAgent>().enabled = false;
+		}
 	}
 
 	// stuff to do while alive
@@ -97,7 +104,7 @@ public class EnemyAgentController : MonoBehaviour {
 		// attack the player
 		if(fireTimer <= 0) {
 			if(targetDistance < attackRange) {
-				fireTimer += fireRate;
+				fireTimer = fireRate;
 				BulletController o = ((GameObject)Instantiate(bullet, transform.position, transform.rotation)).GetComponent<BulletController> ();
 				o.target = target;
 				o.player = target;
@@ -126,15 +133,21 @@ public class EnemyAgentController : MonoBehaviour {
 	void setAlive(bool state) {
 		isDead = !state;
 		GetComponent<MeshRenderer>().enabled = state;
-		GetComponent<NavMeshAgent>().enabled = state;
 		GetComponent<CapsuleCollider>().enabled = state;
+		if(state) {
+			startAgent();
+		} else {
+			stopAgent();
+		}
 	}
 
 	// start and stop agent
 	public void startAgent() {
-		agent.Stop();
+		GetComponent<NavMeshAgent>().enabled = true;
+		stopped = false;
 	}
 	public void stopAgent() {
-		agent.SetDestination(target.transform.position);
+		GetComponent<NavMeshAgent>().enabled = false;
+		stopped = true;
 	}
 }

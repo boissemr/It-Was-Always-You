@@ -19,8 +19,9 @@ public class AgentController : MonoBehaviour {
 	float				fireTimer;
 	Animator			animator;
 
-	[HideInInspector]
+
 	public float	gameSpeed;
+	[HideInInspector]
 	public Vector3	previousPosition;
 
 	// start

@@ -98,7 +98,7 @@ public class TotemController : MonoBehaviour {
 						o = oldEnemies[j].gameObject;
 						
 						n.transform.localPosition = o.transform.localPosition;
-						//newEnemies[j].stopAgent();
+						newEnemies[j].stopAgent();
 					}
 
 					// target
@@ -126,8 +126,7 @@ public class TotemController : MonoBehaviour {
 					for(int j = 0; j < oldEnemies.Length; j++) {
 
 						newEnemies[j].health = oldEnemies[j].health;
-						newEnemies[j].GetComponent<NavMeshAgent>().enabled = true;
-						//newEnemies[j].startAgent();
+						newEnemies[j].startAgent();
 					}
 
 					// break

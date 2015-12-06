@@ -13,10 +13,6 @@ public class UIController : MonoBehaviour {
 	}
 
 	void Update() {
-		if(player.activeSelf) {
-			t.text = player.GetComponent<AgentController>().health.ToString();
-		} else {
-			t.text = "0";
-		}
+		t.text = player.GetComponent<AgentController>().health.ToString();
 	}
 }

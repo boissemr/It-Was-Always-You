@@ -8,11 +8,21 @@ public class TotemController : MonoBehaviour {
 
 	// private variables
 	GameObject		oldGroup,
-					newGroup;
+					newGroup,
+					o,
+					n;
 	Transform[]		oldChildren,
 					newChildren;
 	GameObject[]	groups;
 	float			DEBUG_TIMER;
+	ClickToMove[]	oldTargets,
+					newTargets;
+	AgentController[]	oldPlayers,
+						newPlayers;
+	EnemyAgentController[]	oldEnemies,
+							newEnemies;
+	TotemController[]	oldTotems,
+						newTotems;
 
 	// start
 	void Start() {
@@ -65,75 +75,59 @@ public class TotemController : MonoBehaviour {
 					// activate the new group
 					newGroup.SetActive(true);
 
-					// find all the children in the old and new groups
-					oldChildren = oldGroup.GetComponentsInChildren<Transform>();
-					newChildren = newGroup.GetComponentsInChildren<Transform>();
+					// identify old and new arrays
+					oldEnemies = oldGroup.GetComponentsInChildren<EnemyAgentController>();
+					newEnemies = newGroup.GetComponentsInChildren<EnemyAgentController>();
+					oldTargets = oldGroup.GetComponentsInChildren<ClickToMove>();
+					newTargets = newGroup.GetComponentsInChildren<ClickToMove>();
+					oldPlayers = oldGroup.GetComponentsInChildren<AgentController>();
+					newPlayers = newGroup.GetComponentsInChildren<AgentController>();
+					oldTotems = oldGroup.GetComponentsInChildren<TotemController>();
+					newTotems = newGroup.GetComponentsInChildren<TotemController>();
 
-					// match the attributes of children from old to new
-					for(int j = 0; j < oldChildren.Length; j++) {
-
-						/*
-						 * !NOTE
-						 * to fix issue with enemy jumping
-						 * all enemies must have agents disabled when player's state is copied
-						 * maybe disable enemy agents in Awake()?
-						 */
-
-						// get this child's old and new instances
-						GameObject o = oldChildren[j].gameObject;
-						GameObject n = newChildren[j].gameObject;
+					// totems
+					for(int j = 0; j < oldTotems.Length; j++) {
 						
-						// totems
-						/*
-						 * !NOTE
-						 * something seriously janky happens here if we are copying from the original sreen
-						 * why does it happen?
-						 */
-						/*
-						if(o.name == "totemCollider") {
+						newTotems[j].isUsed = oldTotems[j].isUsed;
+					}
 
-							// get controllers
-							TotemController			nController = n.GetComponent<TotemController>(),
-													oController = o.GetComponent<TotemController>();
+					// enemies 1
+					for(int j = 0; j < oldEnemies.Length; j++) {
 
-							// copy state from old to new
-							nController.isUsed = oController.isUsed;
-						}
-						*/
+						n = newEnemies[j].gameObject;
+						o = oldEnemies[j].gameObject;
 						
-						// target
-						if(o.layer == 9) {
-							
-							// copy state from old to new
-							n.transform.localPosition = o.transform.localPosition;
-						}
-						
-						// player						
-						if(o.layer == 8) {
-							
-							// get controllers
-							AgentController			nController = n.GetComponent<AgentController>(),
-													oController = o.GetComponent<AgentController>();
-							
-							// copy state from old to new
-							n.transform.localPosition = o.transform.localPosition;
-							nController.health = oController.health;
-							nController.GetComponent<NavMeshAgent>().enabled = true;
-							nController.target.transform.localPosition = oController.target.transform.localPosition;
-						}
-						
-						// enemies
-						if(o.layer == 10) {
-							
-							// get controllers
-							EnemyAgentController	nController = n.GetComponent<EnemyAgentController>(),
-													oController = o.GetComponent<EnemyAgentController>();
-							
-							// copy state from old to new
-							n.transform.localPosition = o.transform.localPosition;
-							nController.health = oController.health;
-							nController.GetComponent<NavMeshAgent>().enabled = true;
-						}
+						n.transform.localPosition = o.transform.localPosition;
+						//newEnemies[j].stopAgent();
+					}
+
+					// target
+					for(int j = 0; j < oldTargets.Length; j++) {
+
+						n = newTargets[j].gameObject;
+						o = oldTargets[j].gameObject;
+
+						n.transform.localPosition = o.transform.localPosition;
+					}
+
+					// player
+					for(int j = 0; j < oldPlayers.Length; j++) {
+
+						n = newPlayers[j].gameObject;
+						o = oldPlayers[j].gameObject;
+
+						n.transform.localPosition = o.transform.localPosition;
+						newPlayers[j].health = oldPlayers[j].health;
+						newPlayers[j].GetComponent<NavMeshAgent>().enabled = true;
+						newPlayers[j].target.transform.localPosition = oldPlayers[j].target.transform.localPosition;
+					}
+
+					// enemies 2
+					for(int j = 0; j < oldEnemies.Length; j++) {
+
+						newEnemies[j].health = oldEnemies[j].health;
+						newEnemies[j].GetComponent<NavMeshAgent>().enabled = true;
+						//newEnemies[j].startAgent();
 					}
 
 					// break

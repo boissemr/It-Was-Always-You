@@ -45,7 +45,9 @@ public class BulletController : MonoBehaviour {
 			c.gameObject.GetComponent<EnemyAgentController>().health -= damage;
 			if(c.GetComponent<EnemyAgentController>().health <= 0) {
 				sound.playSound(sound.enemyDeathSFX);
-				c.GetComponent<EnemyAgentController>().dropLoot();
+				for(int i = 0; i < player.GetComponent<AgentController>().moneyMultiplier; i++) {
+					c.GetComponent<EnemyAgentController>().dropLoot();
+				}
 			}
 			DestroyObject(transform.gameObject);
 		} else if (!isFriendlyBullet && c.gameObject.layer == 8) {

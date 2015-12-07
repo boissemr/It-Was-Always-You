@@ -11,11 +11,12 @@ public class AgentController : MonoBehaviour {
 						reach,
 						fireRate,
 						invincibilityTime,
-						money;
+						money,
+						moneyMultiplier;
 	public List<Item>	items;
+	public bool			ratKing;
 
 	// private variables
-	NavMeshAgent		agent;
 	LayerMask			targets,
 						enemies;
 	RaycastHit[]		hit;
@@ -25,6 +26,7 @@ public class AgentController : MonoBehaviour {
 
 	[HideInInspector]
 	public float		invincibilityTimer;
+	public NavMeshAgent	agent;
 
 
 

@@ -7,6 +7,7 @@ public class EnemyAgentController : MonoBehaviour {
 	public GameObject	target,
 						bullet,
 						loot;
+	public int			lootAmount;
 	public float		health,
 						speed,
 						engagementRange,
@@ -16,7 +17,9 @@ public class EnemyAgentController : MonoBehaviour {
 	public bool			returnToPost,
 						alwaysFacePlayer,
 						wander,
-						isDead;
+						isDead,
+						spreadShot,
+						isRat;
 
 	// private variables
 	NavMeshAgent		agent;
@@ -48,6 +51,12 @@ public class EnemyAgentController : MonoBehaviour {
 
 	// update
 	void Update() {
+
+		if(isRat && target.GetComponent<AgentController>().ratKing) {
+			retreatRange = 15;
+			engagementRange = retreatRange;
+			attackRange = 0;
+		}
 
 		if(stopped) {
 			gameSpeed = 0;
@@ -110,7 +119,7 @@ public class EnemyAgentController : MonoBehaviour {
 		if(fireTimer <= 0) {
 			if(targetDistance < attackRange) {
 				fireTimer = fireRate;
-				BulletController o = ((GameObject)Instantiate(bullet, transform.position, transform.rotation)).GetComponent<BulletController> ();
+				BulletController o = ((GameObject)Instantiate(bullet, transform.position, transform.rotation)).GetComponent<BulletController>();
 				o.target = target;
 				o.player = target;
 			}
@@ -138,7 +147,9 @@ public class EnemyAgentController : MonoBehaviour {
 
 	// drop loot
 	public void dropLoot() {
-		Instantiate(loot, transform.position, transform.rotation);
+		for(int i = 0; i < lootAmount; i++) {
+			Instantiate(loot, transform.position, transform.rotation);
+		}
 	}
 
 	// start and stop agent

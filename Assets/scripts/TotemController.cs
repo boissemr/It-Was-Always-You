@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TotemController : MonoBehaviour {
 
@@ -128,6 +129,10 @@ public class TotemController : MonoBehaviour {
 						newPlayers[j].money = oldPlayers[j].money;
 						newPlayers[j].GetComponent<NavMeshAgent>().enabled = true;
 						newPlayers[j].target.transform.localPosition = oldPlayers[j].target.transform.localPosition;
+
+						// item management
+						newPlayers[j].items.Clear();
+						foreach(Item item in oldPlayers[j].items) newPlayers[j].items.Add(item);
 					}
 
 					// enemies 2
@@ -135,6 +140,14 @@ public class TotemController : MonoBehaviour {
 
 						newEnemies[j].health = oldEnemies[j].health;
 						newEnemies[j].startAgent();
+					}
+					
+					// refresh items
+					foreach(GameObject o in GameObject.FindGameObjectsWithTag("UIitem")) {
+						Destroy(o);
+					}
+					foreach(GameObject o in GameObject.FindGameObjectsWithTag("UIcamera")) {
+						o.GetComponent<UIController>().updateItems();
 					}
 
 					// break

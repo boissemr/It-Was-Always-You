@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class AgentController : MonoBehaviour {
 
@@ -11,7 +12,7 @@ public class AgentController : MonoBehaviour {
 						fireRate,
 						invincibilityTime,
 						money;
-	public Item[]		items;
+	public List<Item>	items;
 
 	// private variables
 	NavMeshAgent		agent;
@@ -52,6 +53,21 @@ public class AgentController : MonoBehaviour {
 	// update
 	void Update () {
 
+		// DEBUG ADD ITEM
+		if(Input.GetButtonDown("Fire2")) {
+
+			// add item
+			items.Add(GameObject.Find("item1").GetComponent<Item>());
+
+			// refresh items
+			foreach(GameObject o in GameObject.FindGameObjectsWithTag("UIitem")) {
+				Destroy(o);
+			}
+			foreach(GameObject o in GameObject.FindGameObjectsWithTag("UIcamera")) {
+				o.GetComponent<UIController>().updateItems();
+			}
+		}
+
 		// determining game speed
 		gameSpeed = (transform.position - previousPosition).magnitude / Time.deltaTime;
 		previousPosition = transform.position;
@@ -84,7 +100,7 @@ public class AgentController : MonoBehaviour {
 		// attack targeted enemy
 		if(fireTimer <= 0) {
 			if (targetEnemy != null) {
-				fireTimer += fireRate;
+				fireTimer = fireRate;
 				BulletController o = ((GameObject)Instantiate(bullet, transform.position, transform.rotation)).GetComponent<BulletController>();
 				o.target = targetEnemy;
 				o.player = transform.gameObject;

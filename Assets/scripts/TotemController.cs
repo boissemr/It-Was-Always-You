@@ -97,8 +97,8 @@ public class TotemController : MonoBehaviour {
 						n = newEnemies[j].gameObject;
 						o = oldEnemies[j].gameObject;
 						
-						n.transform.localPosition = o.transform.localPosition;
 						newEnemies[j].stopAgent();
+						n.transform.localPosition = o.transform.localPosition;
 					}
 
 					// target

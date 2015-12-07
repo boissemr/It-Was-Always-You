@@ -125,6 +125,7 @@ public class TotemController : MonoBehaviour {
 
 						n.transform.localPosition = o.transform.localPosition;
 						newPlayers[j].health = oldPlayers[j].health;
+						newPlayers[j].money = oldPlayers[j].money;
 						newPlayers[j].GetComponent<NavMeshAgent>().enabled = true;
 						newPlayers[j].target.transform.localPosition = oldPlayers[j].target.transform.localPosition;
 					}

@@ -11,6 +11,7 @@ public class AgentController : MonoBehaviour {
 						fireRate,
 						invincibilityTime,
 						money;
+	public Item[]		items;
 
 	// private variables
 	NavMeshAgent		agent;

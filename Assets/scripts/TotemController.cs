@@ -7,6 +7,7 @@ public class TotemController : MonoBehaviour {
 	public bool		isUsed;
 
 	// private variables
+	SoundManager	sound;
 	GameObject		oldGroup,
 					newGroup,
 					o,
@@ -28,6 +29,9 @@ public class TotemController : MonoBehaviour {
 	void Start() {
 		isUsed = false;
 		DEBUG_TIMER = 10;
+		
+		// sound manager
+		sound = GameObject.Find("soundManager").GetComponent<SoundManager>();
 	}
 
 	// activate
@@ -58,6 +62,9 @@ public class TotemController : MonoBehaviour {
 
 		//if the player triggers the totem
 		if(c.gameObject.tag == "Player" && !isUsed && DEBUG_TIMER <= 0) {
+
+			// sound
+			sound.playSound(sound.totemCopySFX);
 
 			// activate first unused group
 			groups = GameObject.Find("sceneController").GetComponent<SceneController>().GetGroups();

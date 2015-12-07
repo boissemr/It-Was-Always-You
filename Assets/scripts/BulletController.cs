@@ -40,20 +40,20 @@ public class BulletController : MonoBehaviour {
 		// hurt enemies
 		if (isFriendlyBullet && c.gameObject.layer == 10) {
 
-			sound.bulletHit();
+			sound.playSound(sound.friendlyBulletHitSFX);
 
 			c.gameObject.GetComponent<EnemyAgentController>().health -= damage;
 			if(c.GetComponent<EnemyAgentController>().health <= 0) {
-				sound.enemyDeath();
+				sound.playSound(sound.enemyDeathSFX);
 			}
 			DestroyObject(transform.gameObject);
 		} else if (!isFriendlyBullet && c.gameObject.layer == 8) {
 
-			sound.bulletHit();
+			sound.playSound(sound.enemyBulletHitSFX);
 
 			c.gameObject.GetComponent<AgentController>().health -= damage;
 			if(c.GetComponent<AgentController>().health <= 0) {
-				sound.playerDeath();
+				sound.playSound(sound.playerDeathSFX);
 			}
 			DestroyObject(transform.gameObject);
 		}

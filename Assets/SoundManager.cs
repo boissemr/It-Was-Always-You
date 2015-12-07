@@ -3,16 +3,14 @@ using System.Collections;
 
 public class SoundManager : MonoBehaviour {
 
-	public AudioClip[]	bulletHitSFX,
+	public AudioClip[]	friendlyBulletHitSFX,
+						enemyBulletHitSFX,
 						playerDeathSFX,
-						enemyDeathSFX;
+						enemyDeathSFX,
+						totemCopySFX;
 
 	// play random sound from array
-	void playSound(AudioClip[] sfx) {
+	public void playSound(AudioClip[] sfx) {
 		GetComponent<AudioSource>().PlayOneShot(sfx[(int)Random.Range(0, sfx.Length)]);
 	}
-
-	public void bulletHit() { playSound(bulletHitSFX); }
-	public void playerDeath() { playSound(playerDeathSFX); }
-	public void enemyDeath() { playSound(enemyDeathSFX); }
 }

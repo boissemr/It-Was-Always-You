@@ -52,9 +52,11 @@ public class EnemyAgentController : MonoBehaviour {
 			gameSpeed = target.GetComponent<AgentController> ().gameSpeed;
 		}
 
-		if (isDead) {
-			doWhileDead();
-		} else {
+		// die if health is below 0
+		if(health <= 0) setAlive(false);
+		if(health > 0) setAlive(true);
+
+		if(!isDead) {
 			doWhileAlive();
 		}
 	}
@@ -117,16 +119,6 @@ public class EnemyAgentController : MonoBehaviour {
 		if(alwaysFacePlayer) {
 			transform.LookAt(new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z));
 		}
-
-		// die if health is below 0
-		if(health <= 0) setAlive(false);
-	}
-
-	// stuff to do while dead
-	void doWhileDead() {
-
-		// resurrection if health is above 0
-		if(health > 0) setAlive(true);
 	}
 
 	// set renderer and collider

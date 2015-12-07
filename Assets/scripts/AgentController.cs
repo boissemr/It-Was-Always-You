@@ -8,7 +8,9 @@ public class AgentController : MonoBehaviour {
 						bullet;
 	public float		health,
 						reach,
-						fireRate;
+						fireRate,
+						invincibilityTime,
+						money;
 
 	// private variables
 	NavMeshAgent		agent;
@@ -19,9 +21,13 @@ public class AgentController : MonoBehaviour {
 	float				fireTimer;
 	Animator			animator;
 
-
-	public float	gameSpeed;
 	[HideInInspector]
+	public float		invincibilityTimer;
+
+
+
+	[HideInInspector]
+	public float	gameSpeed;
 	public Vector3	previousPosition;
 
 	// start
@@ -43,10 +49,14 @@ public class AgentController : MonoBehaviour {
 	}
 
 	// update
-	void Update () {		
+	void Update () {
+
 		// determining game speed
 		gameSpeed = (transform.position - previousPosition).magnitude / Time.deltaTime;
 		previousPosition = transform.position;
+
+		// invincibility frames
+		invincibilityTimer -= gameSpeed;
 
 		// animation
 		if(gameSpeed == 0) {
@@ -97,5 +107,9 @@ public class AgentController : MonoBehaviour {
 		float	aMagnitude = (transform.position - a.collider.transform.position).sqrMagnitude,
 				bMagnitude = (transform.position - b.collider.transform.position).sqrMagnitude;
 		return	aMagnitude.CompareTo(bMagnitude);
+	}
+
+	public void resetInvincibilityTimer() {
+		invincibilityTimer = invincibilityTime;
 	}
 }

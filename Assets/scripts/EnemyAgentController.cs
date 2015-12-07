@@ -5,7 +5,8 @@ public class EnemyAgentController : MonoBehaviour {
 
 	// public parameters
 	public GameObject	target,
-						bullet;
+						bullet,
+						loot;
 	public float		health,
 						speed,
 						engagementRange,
@@ -32,6 +33,7 @@ public class EnemyAgentController : MonoBehaviour {
 
 	// start
 	void Start() {
+
 		// assign start position for returnToPost enemies
 		startPosition = transform.position;
 
@@ -46,10 +48,11 @@ public class EnemyAgentController : MonoBehaviour {
 
 	// update
 	void Update() {
+
 		if(stopped) {
 			gameSpeed = 0;
 		} else {
-			gameSpeed = target.GetComponent<AgentController> ().gameSpeed;
+			gameSpeed = target.GetComponent<AgentController>().gameSpeed;
 		}
 
 		// die if health is below 0
@@ -97,7 +100,7 @@ public class EnemyAgentController : MonoBehaviour {
 						agent.SetDestination(startPosition);
 					}
 				} else {
-					wanderTimer -= gameSpeed * Time.deltaTime;
+					wanderTimer -= gameSpeed;
 				}
 				agent.speed = gameSpeed * speed;
 			}
@@ -131,6 +134,11 @@ public class EnemyAgentController : MonoBehaviour {
 		} else {
 			stopAgent();
 		}
+	}
+
+	// drop loot
+	public void dropLoot() {
+		Instantiate(loot, transform.position, transform.rotation);
 	}
 
 	// start and stop agent

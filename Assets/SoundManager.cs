@@ -7,7 +7,8 @@ public class SoundManager : MonoBehaviour {
 						enemyBulletHitSFX,
 						playerDeathSFX,
 						enemyDeathSFX,
-						totemCopySFX;
+						totemCopySFX,
+						moneySFX;
 
 	// play random sound from array
 	public void playSound(AudioClip[] sfx) {

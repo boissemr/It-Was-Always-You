@@ -6,13 +6,22 @@ public class UIController : MonoBehaviour {
 
 	public GameObject player;
 
-	Text t;
+	Text[] texts;
 
 	void Start() {
-		t = GetComponentInChildren<Text>();
+		texts = GetComponentsInChildren<Text>();
 	}
 
 	void Update() {
-		t.text = player.GetComponent<AgentController>().health.ToString();
+		foreach(Text o in texts) {
+			switch(o.gameObject.name) {
+				case "health":
+					o.text = player.GetComponent<AgentController>().health.ToString();
+					break;
+				case "money":
+					o.text = player.GetComponent<AgentController>().money.ToString();
+					break;
+			}
+		}
 	}
 }

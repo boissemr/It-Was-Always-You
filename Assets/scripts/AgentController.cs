@@ -53,21 +53,6 @@ public class AgentController : MonoBehaviour {
 	// update
 	void Update () {
 
-		// DEBUG ADD ITEM
-		if(Input.GetButtonDown("Fire2")) {
-
-			// add item
-			items.Add(GameObject.Find("item1").GetComponent<Item>());
-
-			// refresh items
-			foreach(GameObject o in GameObject.FindGameObjectsWithTag("UIitem")) {
-				Destroy(o);
-			}
-			foreach(GameObject o in GameObject.FindGameObjectsWithTag("UIcamera")) {
-				o.GetComponent<UIController>().updateItems();
-			}
-		}
-
 		// determining game speed
 		gameSpeed = (transform.position - previousPosition).magnitude / Time.deltaTime;
 		previousPosition = transform.position;
